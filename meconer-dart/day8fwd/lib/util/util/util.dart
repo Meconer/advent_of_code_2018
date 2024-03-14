@@ -1,8 +1,8 @@
 import 'dart:io';
 
-Future<List<String>> readInput(String fileName) {
+List<String> readInput(String fileName) {
   final file = File(fileName);
-  return file.readAsLines();
+  return file.readAsLinesSync();
 }
 
 String readInputAsString(String fileName) {
