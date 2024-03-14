@@ -27,15 +27,15 @@ int powerLevel(int x, int y, int serialNo) {
   return powerLevel;
 }
 
-int resultP1() {
+String resultP1() {
   final grid = buildGrid(problem.getInput());
-  int x, y, sum;
-  (x, y, sum) = findLargest(grid);
-  print("$x,$y - sum $sum");
-  return 0;
+  int x, y;
+  (x, y) = findLargest(grid);
+  final result = "$x,$y";
+  return result;
 }
 
-(int, int, int) findLargest(List<List<int>> grid) {
+(int, int) findLargest(List<List<int>> grid) {
   int maxSum = -99999;
   int bestStartX = 0;
   int bestStartY = 0;
@@ -54,7 +54,7 @@ int resultP1() {
       }
     }
   }
-  return (bestStartX + 1, bestStartY + 1, maxSum);
+  return (bestStartX + 1, bestStartY + 1);
 }
 
 (int, int, int) findLargestP2(List<List<int>> grid) {
@@ -99,10 +99,10 @@ List<List<int>> buildGrid(int serialNo) {
   return grid;
 }
 
-int resultP2() {
+String resultP2() {
   final grid = buildGrid(problem.getInput());
   int x, y, gridSize;
   (x, y, gridSize) = findLargestP2(grid);
-  print("$x,$y,$gridSize");
-  return 0;
+  String result = "$x,$y,$gridSize";
+  return result;
 }
