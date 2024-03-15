@@ -91,7 +91,7 @@ int resultP2() {
       int count = countPlants(state);
       int diff = count - lastCount;
       lastCount = count;
-      print("$generation - $count : diff $diff");
+      // print("$generation - $count : diff $diff");
     }
   }
   int totalGens = 50000000000;
