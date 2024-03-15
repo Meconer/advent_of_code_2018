@@ -84,12 +84,13 @@ int resultP2() {
 
   const int noOfGenerations = 1000;
   int lastCount = 0;
+  int diff = 0;
   for (int generation = 0; generation < noOfGenerations; generation++) {
     // print("$generation: $state");
     state = evolve(state, spreadings);
     if (generation % 100 == 0) {
       int count = countPlants(state);
-      int diff = count - lastCount;
+      diff = count - lastCount;
       lastCount = count;
       // print("$generation - $count : diff $diff");
     }
@@ -97,7 +98,7 @@ int resultP2() {
   int totalGens = 50000000000;
   int countAt500 = 19422;
   int gensLeft = totalGens - 500;
-  int diffPerGen = 38;
+  int diffPerGen = diff ~/ 100;
   int totalCount = countAt500 + (gensLeft - 1) * diffPerGen;
   return totalCount;
 }
