@@ -163,7 +163,7 @@ int makeRecipesP2(List<int> wantedRecepy) {
     elfA = (elfA + recepies[elfA] + 1) % recepies.length;
     elfB = (elfB + recepies[elfB] + 1) % recepies.length;
     ready = correctNumbers.length >= wantedRecepy.length;
-    if (recepies.length % 10000 == 0) print(recepies.length);
+    // if (recepies.length % 10000 == 0) print(recepies.length);
   }
 
   return nodeCountP2 - correctNumbers.length;
