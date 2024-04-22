@@ -1,4 +1,4 @@
-import '../util/util/util.dart';
+import '../util/util.dart';
 
 class Problem {
   bool isExample;
