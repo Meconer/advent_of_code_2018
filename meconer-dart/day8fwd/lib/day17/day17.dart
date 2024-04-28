@@ -110,13 +110,12 @@ int resultP1() {
   Board board = Board(problem.getInput());
   board.printBoard();
   bool ready = false;
-  Set<LinePos> waterInFlow = {};
-  waterInFlow.add(LinePos(500, 1));
+  Set<LinePos> waterFront = {};
+  waterFront.add(LinePos(500, 1));
   int lastCount = 0;
   while (!ready) {
-    Set<LinePos> newDrops = {};
-    Set<LinePos> spotsToRemove = {};
-    for (var waterDrop in waterInFlow) {
+    Set<LinePos> newFronts = {};
+    for (var waterDrop in waterFront) {
       if (!board.spots.containsKey(waterDrop)) {
         board.spots[waterDrop] = SpotMtrl.reachable;
       }
@@ -129,8 +128,8 @@ int resultP1() {
           for (int col = left; col <= right; col++) {
             LinePos pos = LinePos(col, waterDrop.row);
             board.spots[pos] = SpotMtrl.water;
-            spotsToRemove.add(pos);
           }
+          newFronts.add(waterDrop.moveUp());
         }
 
         if (left < 0 && right > 0) {
@@ -139,9 +138,8 @@ int resultP1() {
           for (int col = -left; col <= right; col++) {
             LinePos pos = LinePos(col, waterDrop.row);
             board.spots[pos] = SpotMtrl.reachable;
-            spotsToRemove.add(pos);
           }
-          newDrops.add(LinePos(-left - 1, waterDrop.row));
+          newFronts.add(LinePos(-left - 1, waterDrop.row));
         }
 
         if (left > 0 && right < 0) {
@@ -150,7 +148,7 @@ int resultP1() {
           for (int col = left; col <= -right; col++) {
             board.spots[LinePos(col, waterDrop.row)] = SpotMtrl.reachable;
           }
-          newDrops.add(LinePos(-right + 1, waterDrop.row));
+          newFronts.add(LinePos(-right + 1, waterDrop.row));
         }
 
         if (left < 0 && right < 0) {
@@ -159,23 +157,20 @@ int resultP1() {
           for (int col = -left; col <= -right; col++) {
             board.spots[LinePos(col, waterDrop.row)] = SpotMtrl.reachable;
           }
-          newDrops.add(LinePos(-right + 1, waterDrop.row));
-          newDrops.add(LinePos(-left - 1, waterDrop.row));
+          newFronts.add(LinePos(-right + 1, waterDrop.row));
+          newFronts.add(LinePos(-left - 1, waterDrop.row));
         }
       } else {
-        waterDrop = waterDrop.moveDown();
-        newDrops.add(waterDrop);
+        newFronts.add(waterDrop.moveDown());
       }
-      waterInFlow.add(LinePos(500, 1));
     }
-    newDrops =
-        newDrops.where((element) => element.row <= board.range.rowMax).toSet();
-    waterInFlow.addAll(newDrops);
-    waterInFlow.removeAll(spotsToRemove);
+    newFronts =
+        newFronts.where((element) => element.row <= board.range.rowMax).toSet();
+    waterFront = newFronts;
     int count = board.countReachable();
     ready = count == lastCount;
     lastCount = count;
-    // board.printBoard();
+    //board.printBoard();
   }
   return lastCount;
 }
