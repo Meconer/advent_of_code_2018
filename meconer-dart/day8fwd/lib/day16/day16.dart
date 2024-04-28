@@ -50,12 +50,12 @@ int countPossibleInstructions(
       cpu.regs[i] = registersBefore[i];
     }
     // cpu.printRegs();
-    final instrName = cpu.instrMap.keys
-        .firstWhere((element) => cpu.instrMap[element] == instrNo);
-    String s = "Instr: $instrName  ";
-    for (final instr in instrs.sublist(1)) {
-      s += "$instr, ";
-    }
+    // final instrName = cpu.instrMap.keys
+    //     .firstWhere((element) => cpu.instrMap[element] == instrNo);
+    // String s = "Instr: $instrName  ";
+    // for (final instr in instrs.sublist(1)) {
+    //   s += "$instr, ";
+    // }
     // print(s);
     cpu.doInstrNo(instrNo, instrs);
 
