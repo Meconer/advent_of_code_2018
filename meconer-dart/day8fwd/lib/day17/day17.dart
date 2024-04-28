@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:day8fwd/util/linepos.dart';
 import 'package:day8fwd/util/lprange.dart';
 
@@ -48,11 +50,13 @@ class Board {
     return spots;
   }
 
-  void printBoard() {
+  void printBoard(int minCol, int maxCol, [int maxRow = 0]) {
     print("Board");
-    for (int row = 0; row <= range.rowMax + 1; row++) {
+    maxRow = maxRow != 0 ? maxRow : range.rowMax;
+    int startRow = max(0, maxRow - 30);
+    for (int row = startRow; row <= maxRow + 1; row++) {
       String lineToPrint = "";
-      for (int col = range.colMin - 1; col <= range.colMax + 1; col++) {
+      for (int col = minCol; col <= maxCol; col++) {
         if (!spots.containsKey(LinePos(col, row))) {
           lineToPrint += '.';
           continue;
@@ -108,11 +112,14 @@ class Board {
 
 int resultP1() {
   Board board = Board(problem.getInput());
-  board.printBoard();
+  board.printBoard(board.range.colMin, board.range.colMax);
   bool ready = false;
   Set<LinePos> waterFront = {};
   waterFront.add(LinePos(500, 1));
   int lastCount = 0;
+  int maxRow = 30;
+  int minCol = 480;
+  int maxCol = 520;
   while (!ready) {
     Set<LinePos> newFronts = {};
     for (var waterDrop in waterFront) {
@@ -140,6 +147,7 @@ int resultP1() {
             board.spots[pos] = SpotMtrl.reachable;
           }
           newFronts.add(LinePos(-left - 1, waterDrop.row));
+          minCol = min(minCol, -left - 1);
         }
 
         if (left > 0 && right < 0) {
@@ -149,6 +157,7 @@ int resultP1() {
             board.spots[LinePos(col, waterDrop.row)] = SpotMtrl.reachable;
           }
           newFronts.add(LinePos(-right + 1, waterDrop.row));
+          maxCol = max(maxCol, -right + 1);
         }
 
         if (left < 0 && right < 0) {
@@ -159,6 +168,8 @@ int resultP1() {
           }
           newFronts.add(LinePos(-right + 1, waterDrop.row));
           newFronts.add(LinePos(-left - 1, waterDrop.row));
+          minCol = min(minCol, -left - 1);
+          maxCol = max(maxCol, -right + 1);
         }
       } else {
         newFronts.add(waterDrop.moveDown());
@@ -167,12 +178,15 @@ int resultP1() {
     newFronts =
         newFronts.where((element) => element.row <= board.range.rowMax).toSet();
     waterFront = newFronts;
+
     int count = board.countReachable();
     ready = count == lastCount;
     lastCount = count;
-    //board.printBoard();
+    maxRow = waterFront.fold(
+        maxRow, (previousValue, element) => max(previousValue, element.row));
+    board.printBoard(minCol, maxCol, maxRow);
   }
-  return lastCount;
+  return lastCount; // 25524 too low
 }
 
 bool setEquals<T>(Set<T>? a, Set<T>? b) {
