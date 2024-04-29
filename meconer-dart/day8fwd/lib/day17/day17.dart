@@ -18,7 +18,7 @@ class Problem {
   }
 }
 
-Problem problem = Problem(isExample: false);
+Problem problem = Problem(isExample: true);
 
 enum SpotMtrl { sand, clay, water, reachable }
 
@@ -137,6 +137,8 @@ int resultP1() {
             board.spots[pos] = SpotMtrl.water;
           }
           newFronts.add(waterDrop.moveUp());
+          maxCol = max(right, maxCol);
+          minCol = min(left, minCol);
         }
 
         if (left < 0 && right > 0) {
@@ -172,7 +174,9 @@ int resultP1() {
           maxCol = max(maxCol, -right + 1);
         }
       } else {
-        newFronts.add(waterDrop.moveDown());
+        if (!board.spots.containsKey(waterDrop.moveDown())) {
+          newFronts.add(waterDrop.moveDown());
+        }
       }
     }
     newFronts =
@@ -180,13 +184,13 @@ int resultP1() {
     waterFront = newFronts;
 
     int count = board.countReachable();
-    ready = count == lastCount;
+    ready = waterFront.isEmpty;
     lastCount = count;
     maxRow = waterFront.fold(
         maxRow, (previousValue, element) => max(previousValue, element.row));
-    board.printBoard(minCol, maxCol, maxRow);
+    // board.printBoard(minCol, maxCol, maxRow);
   }
-  return lastCount; // 25524 too low
+  return lastCount; // 25524 too low. 30282 wrong
 }
 
 bool setEquals<T>(Set<T>? a, Set<T>? b) {
