@@ -8,6 +8,7 @@ import '../util/util.dart';
 class Problem {
   bool isExample;
   int dayNo;
+  int resultP2 = 0;
 
   Problem({this.isExample = false, this.dayNo = 17});
 
@@ -108,15 +109,18 @@ class Board {
             element == SpotMtrl.reachable || element == SpotMtrl.water)
         .length;
   }
+
+  int countSettled() {
+    return spots.values.where((element) => element == SpotMtrl.water).length;
+  }
 }
 
 int resultP1() {
   Board board = Board(problem.getInput());
-  board.printBoard(board.range.colMin, board.range.colMax);
+  // board.printBoard(board.range.colMin, board.range.colMax);
   bool ready = false;
   Set<LinePos> waterFront = {};
-  waterFront.add(LinePos(500, 1));
-  int lastCount = 0;
+  waterFront.add(LinePos(500, board.range.rowMin));
   int maxRow = 30;
   int minCol = 480;
   int maxCol = 520;
@@ -175,6 +179,9 @@ int resultP1() {
         }
       } else {
         if (!board.spots.containsKey(waterDrop.moveDown())) {
+          if (waterDrop.row < board.range.rowMax) {
+            board.spots[waterDrop.moveDown()] = SpotMtrl.reachable;
+          }
           newFronts.add(waterDrop.moveDown());
         }
       }
@@ -186,10 +193,21 @@ int resultP1() {
     ready = waterFront.isEmpty;
     maxRow = waterFront.fold(
         maxRow, (previousValue, element) => max(previousValue, element.row));
+    minCol = waterFront.fold(
+            1000, (previousValue, element) => min(element.col, previousValue)) -
+        20;
+    maxCol = waterFront.fold(
+            0, (previousValue, element) => max(element.col, previousValue)) +
+        20;
     // board.printBoard(minCol, maxCol, maxRow);
   }
-  board.printBoard(minCol, maxCol);
-  return board.countReachable(); // 25524 too low. 30282 wrong
+  // board.printBoard(450, 550);
+  int settledWaterCount = board.countSettled();
+  // print("Part 2: $settledWaterCount");
+  problem.resultP2 = settledWaterCount;
+  return board.countReachable(); // 25524 too low. 30382 wrong.
+
+  // 30380 is correct. I had to start filling on the same line as first clay
 }
 
 bool setEquals<T>(Set<T>? a, Set<T>? b) {
@@ -211,5 +229,5 @@ bool setEquals<T>(Set<T>? a, Set<T>? b) {
 }
 
 int resultP2() {
-  return 0;
+  return problem.resultP2;
 }
