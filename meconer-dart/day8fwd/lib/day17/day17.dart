@@ -18,7 +18,7 @@ class Problem {
   }
 }
 
-Problem problem = Problem(isExample: true);
+Problem problem = Problem(isExample: false);
 
 enum SpotMtrl { sand, clay, water, reachable }
 
@@ -183,14 +183,13 @@ int resultP1() {
         newFronts.where((element) => element.row <= board.range.rowMax).toSet();
     waterFront = newFronts;
 
-    int count = board.countReachable();
     ready = waterFront.isEmpty;
-    lastCount = count;
     maxRow = waterFront.fold(
         maxRow, (previousValue, element) => max(previousValue, element.row));
     // board.printBoard(minCol, maxCol, maxRow);
   }
-  return lastCount; // 25524 too low. 30282 wrong
+  board.printBoard(minCol, maxCol);
+  return board.countReachable(); // 25524 too low. 30282 wrong
 }
 
 bool setEquals<T>(Set<T>? a, Set<T>? b) {
