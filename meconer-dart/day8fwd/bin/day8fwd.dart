@@ -31,6 +31,6 @@ Future<void> main(List<String> arguments) async {
   // print('Day  16 part 2: ${day16.resultP2()}');
   // print('Day  17 part 1: ${day17.resultP1()}');
   // print('Day  17 part 2: ${day17.resultP2()}');
-  print('Day  17 part 1: ${day18.resultP1()}');
-  print('Day  17 part 2: ${day18.resultP2()}');
+  print('Day  18 part 1: ${day18.resultP1()}');
+  print('Day  18 part 2: ${day18.resultP2()}');
 }

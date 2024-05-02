@@ -121,10 +121,10 @@ class Board {
 
 int resultP1() {
   Board board = Board(problem.getInput());
-  board.printBoard();
+  // board.printBoard();
   for (int time = 1; time <= 10; time++) {
     board.evolve();
-    print("Time : $time");
+    // print("Time : $time");
     // board.printBoard();
   }
   int treesCount = board.count(SpotMtrl.trees);
@@ -133,5 +133,32 @@ int resultP1() {
 }
 
 int resultP2() {
-  return 0;
+  Board board = Board(problem.getInput());
+  // board.printBoard();
+  Map<(int, int), List<int>> treeLyCount = {};
+
+  for (int time = 1; time <= 1000; time++) {
+    board.evolve();
+
+    int treesCount = board.count(SpotMtrl.trees);
+    int lyCount = board.count(SpotMtrl.lumberyard);
+
+    final cycle = (treesCount, lyCount);
+    if (treeLyCount.containsKey(cycle)) {
+      treeLyCount[cycle]!.add(time);
+    } else {
+      treeLyCount[cycle] = [time];
+    }
+  }
+  int lengthBeforeCycles = treeLyCount.length;
+  treeLyCount.removeWhere((key, value) => value.length < 10);
+  int cycleLength = treeLyCount.length;
+  int totalTime = 1000000000;
+  int noOfCycles = (totalTime - lengthBeforeCycles) ~/ cycleLength;
+  int startCycle = totalTime - (noOfCycles * cycleLength);
+  final result = treeLyCount.entries
+      .where((element) => element.value.contains(startCycle))
+      .first
+      .key;
+  return result.$1 * result.$2;
 }
