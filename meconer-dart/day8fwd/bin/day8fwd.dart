@@ -8,7 +8,8 @@
 // import 'package:day8fwd/day15/day15.dart' as day15;
 // import 'package:day8fwd/day16/day16.dart' as day16;
 // import 'package:day8fwd/day17/day17.dart' as day17;
-import 'package:day8fwd/day18/day18.dart' as day18;
+// import 'package:day8fwd/day18/day18.dart' as day18;
+import 'package:day8fwd/day19/day19.dart' as day19;
 
 Future<void> main(List<String> arguments) async {
   // print('Day  8 part 1: ${day8.resultP1()}');
@@ -31,6 +32,8 @@ Future<void> main(List<String> arguments) async {
   // print('Day  16 part 2: ${day16.resultP2()}');
   // print('Day  17 part 1: ${day17.resultP1()}');
   // print('Day  17 part 2: ${day17.resultP2()}');
-  print('Day  18 part 1: ${day18.resultP1()}');
-  print('Day  18 part 2: ${day18.resultP2()}');
+  // print('Day  18 part 1: ${day18.resultP1()}');
+  // print('Day  18 part 2: ${day18.resultP2()}');
+  print('Day  19 part 1: ${day19.resultP1()}');
+  print('Day  19 part 2: ${day19.resultP2()}');
 }
