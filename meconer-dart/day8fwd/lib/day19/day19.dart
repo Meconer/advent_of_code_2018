@@ -4,7 +4,7 @@ class Problem {
   bool isExample;
   int dayNo;
 
-  Problem({this.isExample = false, this.dayNo = 16});
+  Problem({this.isExample = false, this.dayNo = 19});
 
   List<String> getInput() {
     String dirName = 'lib/day$dayNo/';
@@ -26,42 +26,15 @@ int resultP1() {
   String line = program.removeAt(0);
   int ipRegister = int.parse(line.split(' ')[1]);
   final cpu = Cpu(ipRegister);
-  while(cpu.regs[ipRegister] < program.length) {
+  while (cpu.regs[ipRegister] < program.length) {
     line = program[cpu.regs[ipRegister]];
-    
-    cpu.doInstrNamed(
-        line.split(' ')[0], line.split(' ').map((e) => int.parse(e)).toList());
-        cpu.ipRegister
+
+    cpu.doInstrNamed(line.split(' ')[0],
+        line.split(' ').sublist(1).map((e) => int.parse(e)).toList());
+    cpu.regs[ipRegister]++;
   }
 
-  return 0;
-}
-
-int countPossibleInstructions(
-    List<int> registersBefore, List<int> instrs, List<int> registersAfter) {
-  final cpu = Cpu(0);
-
-  int count = 0;
-  for (int instrNo = 0; instrNo < 16; instrNo++) {
-    for (int i = 0; i < 4; i++) {
-      cpu.regs[i] = registersBefore[i];
-    }
-    // cpu.printRegs();
-    // final instrName = cpu.instrMap.keys
-    //     .firstWhere((element) => cpu.instrMap[element] == instrNo);
-    // String s = "Instr: $instrName  ";
-    // for (final instr in instrs.sublist(1)) {
-    //   s += "$instr, ";
-    // }
-    // print(s);
-    cpu.doInstrNo(instrNo, instrs);
-
-    // cpu.printRegs();
-    // print("");
-    if (cpu.compareRegsWith(registersAfter)) count++;
-  }
-
-  return count;
+  return cpu.regs[0];
 }
 
 class Cpu {
@@ -70,55 +43,55 @@ class Cpu {
 
   Cpu(this.ipRegister);
 
-  void doInstrNo(int instrNo, List<int> instruction) {
+  void doInstrNo(int instrNo, List<int> params) {
     switch (instrNo) {
       case 0:
-        addr(instruction);
+        addr(params);
         break;
       case 1:
-        addi(instruction);
+        addi(params);
         break;
       case 2:
-        mulr(instruction);
+        mulr(params);
         break;
       case 3:
-        muli(instruction);
+        muli(params);
         break;
       case 4:
-        banr(instruction);
+        banr(params);
         break;
       case 5:
-        bani(instruction);
+        bani(params);
         break;
       case 6:
-        borr(instruction);
+        borr(params);
         break;
       case 7:
-        bori(instruction);
+        bori(params);
         break;
       case 8:
-        setr(instruction);
+        setr(params);
         break;
       case 9:
-        seti(instruction);
+        seti(params);
         break;
       case 10:
-        gtir(instruction);
+        gtir(params);
         break;
       case 11:
-        gtri(instruction);
+        gtri(params);
         break;
       case 12:
-        gtrr(instruction);
+        gtrr(params);
         break;
       case 13:
-        eqir(instruction);
+        eqir(params);
         break;
       case 14:
-        eqri(instruction);
+        eqri(params);
         break;
       case 15:
-        eqrr(instruction);
+        eqrr(params);
         break;
     }
   }
@@ -142,82 +115,82 @@ class Cpu {
     'eqrr': 15,
   };
 
-  void doInstrNamed(String name, List<int> regs) {
+  void doInstrNamed(String name, List<int> params) {
     if (!instrMap.containsKey(name)) {
       throw Exception('No instruction with that name');
     }
-    regs[0] = instrMap[name]!;
-    doInstrNo(regs[0], regs);
+    int instrNo = instrMap[name]!;
+    doInstrNo(instrNo, params);
   }
 
   void addr(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] + regs[instructions[2]];
+    regs[instructions[2]] = regs[instructions[0]] + regs[instructions[1]];
   }
 
   void addi(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] + instructions[2];
+    regs[instructions[2]] = regs[instructions[0]] + instructions[1];
   }
 
   void mulr(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] * regs[instructions[2]];
+    regs[instructions[2]] = regs[instructions[0]] * regs[instructions[1]];
   }
 
   void muli(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] * instructions[2];
+    regs[instructions[2]] = regs[instructions[0]] * instructions[1];
   }
 
   void banr(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] & regs[instructions[2]];
+    regs[instructions[2]] = regs[instructions[0]] & regs[instructions[1]];
   }
 
   void bani(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] & instructions[2];
+    regs[instructions[2]] = regs[instructions[0]] & instructions[1];
   }
 
   void borr(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] | regs[instructions[2]];
+    regs[instructions[2]] = regs[instructions[0]] | regs[instructions[1]];
   }
 
   void bori(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] | instructions[2];
+    regs[instructions[2]] = regs[instructions[0]] | instructions[1];
   }
 
   void setr(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]];
+    regs[instructions[2]] = regs[instructions[0]];
   }
 
   void seti(List<int> instructions) {
-    regs[instructions[3]] = instructions[1];
+    regs[instructions[2]] = instructions[0];
   }
 
   void gtir(List<int> instructions) {
-    regs[instructions[3]] = instructions[1] > regs[instructions[2]] ? 1 : 0;
+    regs[instructions[2]] = instructions[0] > regs[instructions[1]] ? 1 : 0;
   }
 
   void gtri(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] > instructions[2] ? 1 : 0;
+    regs[instructions[2]] = regs[instructions[0]] > instructions[1] ? 1 : 0;
   }
 
   void gtrr(List<int> instructions) {
-    regs[instructions[3]] =
-        regs[instructions[1]] > regs[instructions[2]] ? 1 : 0;
+    regs[instructions[2]] =
+        regs[instructions[0]] > regs[instructions[1]] ? 1 : 0;
   }
 
   void eqir(List<int> instructions) {
-    regs[instructions[3]] = instructions[1] == regs[instructions[2]] ? 1 : 0;
+    regs[instructions[2]] = instructions[0] == regs[instructions[1]] ? 1 : 0;
   }
 
   void eqri(List<int> instructions) {
-    regs[instructions[3]] = regs[instructions[1]] == instructions[2] ? 1 : 0;
+    regs[instructions[2]] = regs[instructions[0]] == instructions[1] ? 1 : 0;
   }
 
   void eqrr(List<int> instructions) {
-    regs[instructions[3]] =
-        regs[instructions[1]] == regs[instructions[2]] ? 1 : 0;
+    regs[instructions[2]] =
+        regs[instructions[0]] == regs[instructions[1]] ? 1 : 0;
   }
 
   bool compareRegsWith(List<int> registersAfter) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < regs.length; i++) {
       if (regs[i] != registersAfter[i]) return false;
     }
     return true;
@@ -233,86 +206,18 @@ class Cpu {
 }
 
 int resultP2() {
-  final input = problem.getInput();
-  String line = input.removeAt(0);
-  Map<int, Set<int>> possibleInstrMap = {};
-  while (line.isNotEmpty) {
-    final registersBefore = getRegsFromLine(line);
-    line = input.removeAt(0);
-    final instrs = line.split(' ').map((e) => int.parse(e)).toList();
-    line = input.removeAt(0);
-    final registersAfter = getRegsFromLine(line);
-    final possibleInstructions =
-        getPossibleInstructions(registersBefore, instrs, registersAfter);
-    possibleInstrMap[instrs[0]] = possibleInstructions.toSet();
-    line = input.removeAt(0);
-    line = input.removeAt(0);
-  }
-  bool ready = false;
-  List<int> realInstrMap = List.generate(possibleInstrMap.length, (_) => -1);
-  while (!ready) {
-    for (int realInstrNo = 0;
-        realInstrNo < possibleInstrMap.length;
-        realInstrNo++) {
-      if (possibleInstrMap[realInstrNo]!.length == 1) {
-        realInstrMap[realInstrNo] = possibleInstrMap[realInstrNo]!.first;
-        for (final key in possibleInstrMap.keys) {
-          possibleInstrMap[key]!
-              .removeWhere((instrNo) => instrNo == realInstrMap[realInstrNo]);
-        }
-      }
-    }
-    for (int realInstrNo = 0;
-        realInstrNo < possibleInstrMap.length;
-        realInstrNo++) {
-      int countUsed = 0;
-      int lastKey = -1;
-      for (int mapKey = 0; mapKey < possibleInstrMap.length; mapKey++) {
-        if (possibleInstrMap[mapKey]!.contains(realInstrNo)) {
-          countUsed++;
-          lastKey = mapKey;
-        }
-      }
-      if (countUsed == 1) {
-        realInstrMap[lastKey] = realInstrNo;
-        for (final key in possibleInstrMap.keys) {
-          possibleInstrMap[key]!
-              .removeWhere((element) => element == realInstrMap[realInstrNo]);
-        }
-      }
-    }
-    ready =
-        !possibleInstrMap.values.any((possibleSet) => possibleSet.isNotEmpty);
+  final program = problem.getInput();
+  String line = program.removeAt(0);
+  int ipRegister = int.parse(line.split(' ')[1]);
+  final cpu = Cpu(ipRegister);
+  cpu.regs[0] = 1;
+  while (cpu.regs[ipRegister] < program.length) {
+    line = program[cpu.regs[ipRegister]];
+
+    cpu.doInstrNamed(line.split(' ')[0],
+        line.split(' ').sublist(1).map((e) => int.parse(e)).toList());
+    cpu.regs[ipRegister]++;
   }
 
-  // Now we have a map from the instruction code in the program to the
-  // instruction number in our emulation
-  input.removeAt(0); // Remove the first empty program line
-  final cpu = Cpu(0);
-  for (final programLine in input) {
-    List<int> instructions =
-        programLine.split(' ').map((e) => int.parse(e)).toList();
-    int instrNo = realInstrMap[instructions[0]];
-    cpu.doInstrNo(instrNo, instructions);
-  }
   return cpu.regs[0];
-}
-
-List<int> getPossibleInstructions(
-    List<int> registersBefore, List<int> instrs, List<int> registersAfter) {
-  final cpu = Cpu(0);
-
-  List<int> validInstructions = [];
-
-  for (int instrNo = 0; instrNo < 16; instrNo++) {
-    for (int i = 0; i < 4; i++) {
-      cpu.regs[i] = registersBefore[i];
-    }
-    cpu.doInstrNo(instrNo, instrs);
-
-    // cpu.printRegs();
-    // print("");
-    if (cpu.compareRegsWith(registersAfter)) validInstructions.add(instrNo);
-  }
-  return validInstructions;
 }
