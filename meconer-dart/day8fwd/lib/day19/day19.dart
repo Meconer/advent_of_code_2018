@@ -206,18 +206,58 @@ class Cpu {
 }
 
 int resultP2() {
-  final program = problem.getInput();
-  String line = program.removeAt(0);
-  int ipRegister = int.parse(line.split(' ')[1]);
-  final cpu = Cpu(ipRegister);
-  cpu.regs[0] = 1;
-  while (cpu.regs[ipRegister] < program.length) {
-    line = program[cpu.regs[ipRegister]];
+  // All this commented stuff is things I tried before understanding what the
+  // program did. First is the emulator running the program.
+  // After that comes an attempt to port that program to dart but it takes
+  // forever so I tried to find the factors of the number and just summed them
+  // which is what the program seemed to be doing and that was correct.
 
-    cpu.doInstrNamed(line.split(' ')[0],
-        line.split(' ').sublist(1).map((e) => int.parse(e)).toList());
-    cpu.regs[ipRegister]++;
-  }
+  // final program = problem.getInput();
+  // String line = program.removeAt(0);
+  // int ipRegister = int.parse(line.split(' ')[1]);
+  // final cpu = Cpu(ipRegister);
+  // cpu.regs[0] = 1;
+  // while (cpu.regs[ipRegister] < program.length) {
+  //   line = program[cpu.regs[ipRegister]];
+  //   if (cpu.regs[ipRegister] == 7) {
+  //     print("Line 7");
+  //   }
+  //   if (cpu.regs[ipRegister] == 12) {
+  //     print("Line 12");
+  //   }
+  //   cpu.doInstrNamed(line.split(' ')[0],
+  //       line.split(' ').sublist(1).map((e) => int.parse(e)).toList());
+  //   cpu.regs[ipRegister]++;
+  // }
 
-  return cpu.regs[0];
+  // return cpu.regs[0];
+  // int r0 = 0;
+  // int r1, r2, r3, r5 = 0;
+
+  // factors : 1, 2, 4, 5, 10, 20, 527563, 1055126, 2110252, 2637815, 5275630, 10551260
+  // r1 = 10551260;
+  // r3 = 1;
+  // while (r3 <= r1) {
+  //   r2 = 1;
+  //   while (r2 <= r1) {
+  //     r5 = r2 * r3;
+  //     if (r5 == r1) r0 += r3;
+  //     r2++;
+  //   }
+  //   r3++;
+  // }
+  // return r0;
+  // Program seems to calculate the sum of all factors.
+  return 1 +
+      2 +
+      4 +
+      5 +
+      10 +
+      20 +
+      527563 +
+      1055126 +
+      2110252 +
+      2637815 +
+      5275630 +
+      10551260;
 }
